@@ -16,62 +16,66 @@ error_reporting(E_ALL);
 		$username = $_POST["username"];
 		$score = $_POST["score"];
 
+		$result = $mysqli->query("SELECT `username` FROM `highscores` WHERE `username` = '$username' LIMIT 1");
 		//check if user exists
-		$user = $mysqli->prepare("SELECT * FROM highscores where username='$username'");
-		$user->fetch();
-
-		if($user) {
-
-			//$errors[] = "User does already exist" ;
+		if(mysqli_num_rows($result) > 0)
+        {
 			if ($stmt = $mysqli->prepare("UPDATE `highscores` Set score='".$score."' WHERE username='".$username."' && score<'".$score."'")) {
 
-                    /* execute query */
-				if($stmt->execute()){
-					
-					/* store result */
-					$stmt->store_result();
-					$stmt->fetch();
-					/* close statement */
-					$stmt->close();
-					
+						/* execute query */
+					if($stmt->execute()){
+						
+						/* store result */
+						$stmt->store_result();
+						$stmt->fetch();
+						/* close statement */
+						$stmt->close();
+						
+						
+					}else{
+						$errors[] = "Something went wrong, please try again.";
+					}
 				}else{
 					$errors[] = "Something went wrong, please try again.";
 				}
-			}else{
-				$errors[] = "Something went wrong, please try again.";
-			}
-		} else {
-			// username does not exist
-
-		 
+		}
+		else { 	
 		
-		if(count($errors) == 0){
-
-		
-
-			
+        
 			if ($stmt = $mysqli->prepare("INSERT INTO `highscores` (`username`, `score`) VALUES ('$username', '$score')")) {
 
-                    /* execute query */
-				if($stmt->execute()){
-					
-					/* store result */
-					$stmt->store_result();
-					
-					/* close statement */
-					$stmt->close();
-					
-				}else{
-					$errors[] = "Something went wrong, please try again.";
-				}
-			}else{
-				$errors[] = "Something went wrong, please try again.";
-			}
+				// bind parameters for markers
+                $stmt->bind_param('si', $username, $score);
 
+				/* execute query */
+			if($stmt->execute()){
+				
+				/* store result */
+				$stmt->store_result();
+				$stmt->fetch();
+
+				/* close statement */
+				$stmt->close();
+			}
+		
         }
+		
+	}
+		
+	
+		
+		
+
 	}
 
-}
+			
+	if(count($errors) > 0){
+		echo $errors[0];
+	}
+
+			
+
+
 ?>
 
 				/* bind parameters for markers */

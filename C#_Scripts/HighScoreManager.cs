@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Networking;
 using SimpleJSON;
+using UnityEngine.SceneManagement;
+
 public interface IHighScore
 {
     void SetScore(int score);
@@ -53,6 +55,15 @@ public class HighScoreManager : GenericSingleton<HighScoreManager, IHighScore>, 
     {
         DontDestroyOnLoad(this);
 
+        localScoreText.text = localScore.ToString();
+    }
+
+    public override void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        if(FindObjectOfType<PlayerScore>())
+        {
+            localScoreText = FindObjectOfType<PlayerScore>().ScoreField;
+        }
         localScoreText.text = localScore.ToString();
     }
 
@@ -107,6 +118,7 @@ public class HighScoreManager : GenericSingleton<HighScoreManager, IHighScore>, 
 
                 if (responseText.StartsWith("Success"))
                 {
+                    Debug.Log("Updatehighscore");
                     registrationCompleted = true;                    
                 }
                 else

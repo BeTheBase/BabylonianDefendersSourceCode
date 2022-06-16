@@ -8,6 +8,9 @@ public class ShowHighScores : MonoBehaviour
     {
         //get the highscores out of database and add to ui
         HighScoreManager.Instance.SetHighScoresInDataBase();
+
         HighScoreManager.Instance.GetHighScoresFromDataBase();
+
+        
     }
 }

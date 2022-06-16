@@ -48,6 +48,8 @@ public class LevelLoader : MonoBehaviour
 
     public void RestartGame()
     {
+        Destroy(FindObjectOfType<HighScoreManager>());
+        Destroy(FindObjectOfType<Babylonian.AudioManager>());
         StartCoroutine(LoadLevel(0));
     }
 
